@@ -95,8 +95,8 @@
 (set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
 
-(menu-bar-mode 0)  ;; メニューバーを非表示
-;;(tool-bar-mode 0)  ;; ツールバーを非表示
+;; (menu-bar-mode 0)  ;; メニューバーを非表示
+;; (tool-bar-mode 0)  ;; ツールバーを非表示
 ;; (scroll-nbar-mode -1)  ;; default scroll bar消去
 (show-paren-mode 1)  ;; 対応する括弧をハイライト
 (setq frame-title-format "%f")  ;; タイトルにフルパス表示
@@ -111,9 +111,15 @@
 (setq scroll-conservatively 1)  ;; スクロールは１行ごとに
 (setq mouse-wheel-progressive-speed nil)  ;; スクロールの加速をやめる
 
+
+;;(defun try_require(fun)
+;;  (if (fboundp fun)
+;;      (require fun)))
+
 ;; 括弧を色付け
-;; (require 'rainbow-delimiters)
-;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
 
 ;; 自動補完機能
 ;; (require 'auto-complete)
