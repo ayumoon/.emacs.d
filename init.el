@@ -111,6 +111,8 @@
   (interactive)
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 
+(tabbar-mode 1)
+
 ;; 行の折り返し
 ;; (global-set-key (kbd "C-c l") 'toggle-truncate-lines)
 ;; (defun toggle-truncate-lines ()
@@ -161,6 +163,9 @@
 ;; (require 'auto-complete-config)
 ;; (global-auto-complete-mode t)
 
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
 ;; goto-addr URLなどのリンクを読み取るようにする
 (progn
   (add-hook 'prog-mode-hook 'goto-address-prog-mode)
@@ -176,7 +181,7 @@
  '(custom-safe-themes
    (quote
     ("296209339b86901f8760670bda8bc167327fd5028d44b0f87784c00d68cb04e3" default)))
- '(package-selected-packages (quote (rainbow-delimiters)))
+ '(package-selected-packages (quote (tabbar js2-mode flycheck rainbow-delimiters)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
