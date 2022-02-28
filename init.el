@@ -1,4 +1,5 @@
 ;; package.el
+;; (setq package-check-signature nil)
 (require 'package)
 
 ;; パッケージ追加
@@ -101,7 +102,7 @@
 (load-theme 'zenburn t)
 
 
-;; (define-key global-map (kbd "C-h") 'delete-backward-char) ; 削除
+(define-key global-map (kbd "C-h") 'delete-backward-char) ; 削除
 ;; (define-key global-map (kbd "C-z") 'undo) ; undo
 
 ;; コメントアウト
@@ -115,6 +116,18 @@
 (tabbar-mode 1)
 (setq tabbar-buffer-groups-function nil)
 ;; (setq tabbar-use-images nil)
+
+;; (company-mode 1)
+(add-hook 'after-init-hook 'global-company-mode)
+
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enabel-recursive-minibuffers t)
+
+(global-set-key (kbd "C-x g") 'magit-status)
+
+(require 'undo-tree)
+(global-undo-tree-mode)
 
 ;; 行の折り返し
 ;; (global-set-key (kbd "C-c l") 'toggle-truncate-lines)
@@ -166,7 +179,9 @@
 ;; (require 'auto-complete-config)
 ;; (global-auto-complete-mode t)
 
-(add-hook 'after-init-hook #'global-flycheck-mode)
+(require 'flycheck)
+(global-flycheck-mode 1)
+;; (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 ;; goto-addr URLなどのリンクを読み取るようにする
@@ -184,7 +199,9 @@
  '(custom-safe-themes
    (quote
     ("296209339b86901f8760670bda8bc167327fd5028d44b0f87784c00d68cb04e3" default)))
- '(package-selected-packages (quote (tabbar js2-mode flycheck rainbow-delimiters)))
+ '(package-selected-packages
+   (quote
+    (undo-tree gnu-elpa-keyring-update magit undo-propose company ivy tabbar js2-mode flycheck rainbow-delimiters)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

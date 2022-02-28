@@ -1,5 +1,7 @@
 auto-save-list
 elpa
+transient
+recentf
 *.data
 
 !.keep
