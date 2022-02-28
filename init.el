@@ -111,7 +111,10 @@
   (interactive)
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 
+;; タブエディタ化
 (tabbar-mode 1)
+(setq tabbar-buffer-groups-function nil)
+;; (setq tabbar-use-images nil)
 
 ;; 行の折り返し
 ;; (global-set-key (kbd "C-c l") 'toggle-truncate-lines)
