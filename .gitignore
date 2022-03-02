@@ -1,7 +1,8 @@
 auto-save-list
-elpa
 transient
 recentf
+url
+kkcrc
 *.data
 
 !.keep

@@ -11,123 +11,53 @@
 ;; 初期化
 (package-initialize)
 
-;; for CUI
-(if (not window-system)
-    (progn
-      (defface hlline-face
-	'((((class color)
-	    (background dark))
-	   (:background "gray20"))
-	  (((class color)
-	    (background light))
-	   (:background "black"))
-	  (t
-	   ()))
-	"*Face used by hl-line.")
-      (setq hl-line-face 'hlline-face)
-      ;; (setq hl-line-face 'underline) ; 下線
-      (global-hl-line-mode)
+;; 設定ファイルの読み込み
+(add-to-list 'load-path "~/.emacs.d/init")
 
-      (require 'whitespace)
-      ;; 空白
-      (set-face-foreground 'whitespace-space "gray50")
-      (set-face-background 'whitespace-space nil)
-      ;; タブ
-      (set-face-foreground 'whitespace-tab "gray50")
-      (set-face-background 'whitespace-tab nil)
-      (setq whitespace-style
-	    '(face           ; faceで可視化
-	      tabs           ; タブ
-	      tab-mark       ; タブ表示マッピング
-	      spaces         ; 空白
-	      space-mark     ; 空白表示のマッピング
-	      ))
-      ;; 発動
-      (global-whitespace-mode 1)
-      ))
+(when window-system ; for GUI
 
-;; for GUI
-(if (window-system)
-    (progn
-      ;; line numberの表示
-      (require 'linum)
-      (global-linum-mode 1)
+      )
 
-      (require 'whitespace)
-      ;; 空白
-      ;;(set-face-foreground 'whitespace-space "gray60")
-      ;;(set-face-background 'whitespace-space "gray97")
-      ;; ファイル先頭と末尾の空行
-      ;;(set-face-background 'whitespace-empty "gray95")
-      ;; 改行
-      ;;(set-face-foreground 'whitespace-newline "gray70")
-      ;; タブ
-      ;;(set-face-foreground 'whitespace-tab "gray60")
-      ;;(set-face-background 'whitespace-tab "gray97")
-      ;; ???
-      ;;(set-face-foreground 'whitespace-trailing "gray95")
-      ;;(set-face-background 'whitespace-hspace "gray70")
-      (setq whitespace-style
-	    '(face           ; faceで可視化
-	      ;;trailing       ; 行末
-	      tabs           ; タブ
-	      ;;empty          ; 先頭/末尾の空行
-	      spaces         ; 空白
-	      space-mark     ; 表示のマッピング
-	      new-line       ; 改行
-	      tab-mark
-	      ))
-      ;; 発動
-      ;; (global-whitespace-mode 1)
-      ))
+(unless window-system ; for GUI
+    (load "init_nw");
+      )
 
 ;;
 ;; Emacs common setting
 ;;
-;; 日本語対応、文字コードをutf-8に
-(set-language-environment "Japanese")
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(setq default-buffer-file-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
 
+;; 日本語環境、文字コードはutf-8
+(set-language-environment 'Japanese)
+(set-default-coding-systems 'utf-8-unix)
+(set-terminal-coding-system 'utf-8-unix)  ; emacs -nw で文字化けしない
+(setq default-file-name-coding-system 'utf-8)
+(setq default-process-coding-system '(utf-8 . utf-8))
+(prefer-coding-system 'utf-8-unix)
 
 ;; Ricty Diminished
 (set-fontset-font
  t 'japanese-jisx0208
  (font-spec :family "Ricty"))
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(setq custom-theme-directory "~/.emacs.d/themes")
-(load-theme 'zenburn t)
-
-
 (define-key global-map (kbd "C-h") 'delete-backward-char) ; 削除
 ;; (define-key global-map (kbd "C-z") 'undo) ; undo
 
-;; コメントアウト
-(global-set-key (kbd "C-;") 'commentout-one-line)
-(defun commentout-one-line ()
-  "comment or uncomment current line"
-  (interactive)
-  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
-
-;; タブエディタ化
-(tabbar-mode 1)
-(setq tabbar-buffer-groups-function nil)
-;; (setq tabbar-use-images nil)
-
-;; (company-mode 1)
-(add-hook 'after-init-hook 'global-company-mode)
-
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq enabel-recursive-minibuffers t)
+(load "init_theme") ; テーマの設定
+(load "init_commentout") ; コメントアウトの設定
+(load "init_tabbar") ; tabbarの設定
+(load "init_company") ; companyの設定
+(load "init_counsel") ; ivyの設定
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (require 'undo-tree)
 (global-undo-tree-mode)
+(global-set-key (kbd "M-/") 'undo-tree-redo)
+
+;; line numberの表示
+(require 'linum)
+(global-linum-mode 1)
+
 
 ;; 行の折り返し
 ;; (global-set-key (kbd "C-c l") 'toggle-truncate-lines)
@@ -164,20 +94,14 @@
 (setq scroll-conservatively 1)  ;; スクロールは１行ごとに
 (setq mouse-wheel-progressive-speed nil)  ;; スクロールの加速をやめる
 
-;; "y or n" 選択
-(fset 'yes-or-no-p 'y-or-n-p)
+(fset 'yes-or-no-p 'y-or-n-p) ;; "y or n" 選択
 
 ;; 括弧を色付け
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; 現在行をハイライト
-(global-hl-line-mode)
-
-;; 自動補完機能
-;; (require 'auto-complete)
-;; (require 'auto-complete-config)
-;; (global-auto-complete-mode t)
+;; (global-hl-line-mode)
 
 (require 'flycheck)
 (global-flycheck-mode 1)
@@ -201,7 +125,7 @@
     ("296209339b86901f8760670bda8bc167327fd5028d44b0f87784c00d68cb04e3" default)))
  '(package-selected-packages
    (quote
-    (undo-tree gnu-elpa-keyring-update magit undo-propose company ivy tabbar js2-mode flycheck rainbow-delimiters)))
+    (counsel undo-tree gnu-elpa-keyring-update magit undo-propose company ivy tabbar js2-mode flycheck rainbow-delimiters)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
