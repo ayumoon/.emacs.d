@@ -1,8 +1,12 @@
-;; package.el
-;; (setq package-check-signature nil)
-(require 'package)
+;;; init.el --- Initialization file for Emacs
+;;; Commentary:
+;;; Emacs Startup file --- initialization for Emacs
+
+;;; Code:
 
 ;; パッケージ追加
+;; (setq package-check-signature nil)
+(require 'package)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
@@ -15,48 +19,39 @@
 (add-to-list 'load-path "~/.emacs.d/init")
 
 (when window-system ; for GUI
+  (load "init_gui")
+  )
 
-      )
+(unless window-system ; for CUI
+  (load "init_cui")
+  )
 
-(unless window-system ; for GUI
-    (load "init_nw");
-      )
-
-;;
-;; Emacs common setting
-;;
-
+;;;
+;;; Emacs common setting
+;;;
 ;; 日本語環境、文字コードはutf-8
-(set-language-environment 'Japanese)
-(set-default-coding-systems 'utf-8-unix)
-(set-terminal-coding-system 'utf-8-unix)  ; emacs -nw で文字化けしない
-(setq default-file-name-coding-system 'utf-8)
-(setq default-process-coding-system '(utf-8 . utf-8))
-(prefer-coding-system 'utf-8-unix)
-
-;; Ricty Diminished
-(set-fontset-font
- t 'japanese-jisx0208
- (font-spec :family "Ricty"))
-
-(define-key global-map (kbd "C-h") 'delete-backward-char) ; 削除
-;; (define-key global-map (kbd "C-z") 'undo) ; undo
-
+(load "init_language") ; 言語、文字コード設定
+(load "init_font") ; フォントの設定
 (load "init_theme") ; テーマの設定
 (load "init_commentout") ; コメントアウトの設定
 (load "init_tabbar") ; tabbarの設定
 (load "init_company") ; companyの設定
 (load "init_counsel") ; ivyの設定
 
+(define-key global-map (kbd "C-h") 'delete-backward-char) ; 削除
+(setq-default indent-tabs-mode nil) ; tabをspaceにする
+
+;; git
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-git-gutter-mode t)
+(git-gutter:linum-setup)
 
 (require 'undo-tree)
 (global-undo-tree-mode)
 (global-set-key (kbd "M-/") 'undo-tree-redo)
 
-;; line numberの表示
 (require 'linum)
-(global-linum-mode 1)
+(global-linum-mode 1) ;; line numberの表示
 
 
 ;; 行の折り返し
@@ -72,15 +67,11 @@
 ;; (tool-bar-mode 0)  ;; ツールバーを非表示
 ;; (scroll-nbar-mode -1)  ;; default scroll bar消去
 
-;; 対応する括弧をハイライト
-(show-paren-mode 1)
-;; (setq show-paren-style 'mixed)
+(show-paren-mode 1) ;; 対応する括弧をハイライト
 
-; 括弧を自動で補完する
-(electric-pair-mode 1)
+(electric-pair-mode 1) ;; 括弧を自動で補完する
 
-;; タイトルにフルパス表示
-(setq frame-title-format "%f")
+(setq frame-title-format "%f") ;; タイトルにフルパス表示
 
 (setq inhibit-startup-message 0);; スタートアップメッセージを表示させない
 (setq ring-bell-function 'ignore)  ;; エラー音をならなくする
@@ -125,11 +116,14 @@
     ("296209339b86901f8760670bda8bc167327fd5028d44b0f87784c00d68cb04e3" default)))
  '(package-selected-packages
    (quote
-    (counsel undo-tree gnu-elpa-keyring-update magit undo-propose company ivy tabbar js2-mode flycheck rainbow-delimiters)))
+    (git-gutter counsel undo-tree gnu-elpa-keyring-update magit undo-propose company ivy tabbar js2-mode flycheck rainbow-delimiters)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ricty Diminished Discord" :foundry "PfEd" :slant normal :weight normal :height 132 :width normal)))))
+ )
+
+;;; init.el ends here
+
